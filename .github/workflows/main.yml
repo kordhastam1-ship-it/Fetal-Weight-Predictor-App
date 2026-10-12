@@ -45,6 +45,13 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install "Cython<3" buildozer
 
+      - name: Ensure app version
+        run: |
+          if ! grep -Eq '^[[:space:]]*version[[:space:]]*=' buildozer.spec; then
+            sed -i '/^\[app\]/a version = 1.0' buildozer.spec
+          fi
+          grep -nE '^\[app\]|^[[:space:]]*version[[:space:]]*=' buildozer.spec
+
       - name: Build APK
         run: |
           buildozer -v android debug
